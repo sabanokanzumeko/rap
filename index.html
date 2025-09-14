@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>VibeCoding Lyric Generator</title>
+<style>
+  :root{
+    --bg:#0b0e14;--card:#111624;--text:#e7f0ff;--muted:#93a2c8;
+    --acc:#6ee7ff;--acc2:#a78bfa;--ok:#34d399;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:radial-gradient(1200px 600px at 20% -10%, #13203d 0%, #0b0e14 45%, #070a0f 100%);
+    color:var(--text);font:500 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  }
+  header{
+    padding:24px 20px 8px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap
+  }
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{
+    width:40px;height:40px;border-radius:12px;background:
+      conic-gradient(from 210deg, var(--acc), var(--acc2), var(--acc));
+    box-shadow:0 0 24px rgba(110,231,255,.35), inset 0 0 30px rgba(255,255,255,.08);
+  }
+  h1{margin:0;font-size:20px;letter-spacing:.3px}
+  main{padding:8px 20px 36px;display:grid;grid-template-columns:1.1fr 1.4fr;gap:18px}
+  @media(max-width:980px){ main{grid-template-columns:1fr} }
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00));
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:16px;padding:16px 16px 14px;backdrop-filter: blur(6px);
+    box-shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  .card h2{margin:2px 0 12px;font-size:16px;color:#cfe2ff}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  label{display:block;margin:10px 0 6px;color:var(--muted);font-size:13px}
+  textarea,input,select{
+    width:100%;padding:12px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.08);
+    background:#0e1422;color:var(--text);outline:none;font-size:14px;
+  }
+  textarea{min-height:120px;resize:vertical}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  button{
+    padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.1);
+    background:linear-gradient(180deg, #1a2236, #141b2b);color:var(--text);cursor:pointer;
+    transition:.15s transform ease, .15s background ease;
+  }
+  button:hover{transform:translateY(-1px)}
+  .primary{background:linear-gradient(180deg, #1c3950, #112b3f);border-color:#263d55}
+  .ok{background:linear-gradient(180deg, #174434, #123528);border-color:#1f6a53}
+  .outline{background:transparent}
+  .badge{
+    display:inline-block;font-size:12px;padding:4px 8px;border-radius:999px;margin-left:8px;color:#bde7ff;background:rgba(110,231,255,.12);border:1px solid rgba(110,231,255,.35)
+  }
+  .output{
+    min-height:360px;white-space:pre-wrap;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00));
+    border:1px dashed rgba(255,255,255,.08);border-radius:14px;padding:14px;margin-top:8px
+  }
+  .footerNote{color:var(--muted);font-size:12px;margin-top:10px}
+  .tiny{font-size:12px;color:var(--muted)}
+  .gridFine{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .muted{color:#9eb1db}
+  .tip{font-size:12px;color:#a7ffea}
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>VibeCoding Lyric Generator <span class="badge">ラップ × コーディング</span></h1>
+        <div class="tiny">キーワードを入れて、ムード/韻スキーム/長さを選ぶだけ。完全ローカル・API不要。</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 左：設定 -->
+    <section class="card" aria-labelledby="config">
+      <h2 id="config">設定</h2>
+      <label for="words">キーワード（カンマ or 改行区切り）</label>
+      <textarea id="words" placeholder="例）社会不適合者, デバッグ, 無限, 丸の内, シェアハウス"></textarea>
+
+      <div class="row">
+        <div>
+          <label for="mood">ムード</label>
+          <select id="mood">
+            <option value="heartbreak">失恋×復活</option>
+            <option value="aggressive">アグレッシブ</option>
+            <option value="chill" selected>チル/日常</option>
+            <option value="conscious">社会/内省</option>
+            <option value="flex">自信/フレックス</option>
+          </select>
+        </div>
+        <div>
+          <label for="style">スタイル</label>
+          <select id="style">
+            <option value="boombap" selected>BoomBap</option>
+            <option value="trap">Trap</option>
+            <option value="lofi">Lo-fi</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row3">
+        <div>
+          <label for="scheme">韻スキーム</label>
+          <select id="scheme">
+            <option value="AABB" selected>AABB</option>
+            <option value="ABAB">ABAB</option>
+            <option value="AAAA">AAAA</option>
+          </select>
+        </div>
+        <div>
+          <label for="bars">バー数</label>
+          <select id="bars">
+            <option value="8">8 bars</option>
+            <option value="12" selected>12 bars</option>
+            <option value="16">16 bars</option>
+          </select>
+        </div>
+        <div>
+          <label for="seed">SEED（同じ結果にしたい時）</label>
+          <input id="seed" placeholder="任意の文字列。空だと毎回ランダム" />
+        </div>
+      </div>
+
+      <div class="gridFine">
+        <div>
+          <label><input type="checkbox" id="showHooks" checked /> サビ（フック）を自動生成</label>
+        </div>
+        <div>
+          <label><input type="checkbox" id="codeTone" checked /> コーディング用語を多めに混ぜる</label>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="gen" class="primary">リリックを生成</button>
+        <button id="copy" class="outline">コピー</button>
+        <button id="download" class="outline">.txtで保存</button>
+        <button id="share" class="ok">共有</button>
+      </div>
+      <div class="footerNote">
+        <span class="tip">Tip:</span> 同じSEED＋同じ設定＝同じ歌詞。ランダムにしたいときはSEEDを空に。
+      </div>
+    </section>
+
+    <!-- 右：出力 -->
+    <section class="card" aria-labelledby="outputTitle">
+      <h2 id="outputTitle">出力</h2>
+      <div id="out" class="output" aria-live="polite" aria-atomic="true">ここにリリックが表示されます。</div>
+      <div class="footerNote muted">※ 簡易的な擬似韻ロジックで終韻を合わせています（日本語＋ローマ字っぽい終端）。</div>
+    </section>
+  </main>
+
+<script>
+/* ===== 小さなユーティリティ（シード付き乱数） ===== */
+function xmur3(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19;}return function(){h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return (h^h>>>16)>>>0;}}
+function mulberry32(a){return function(){var t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15, t|1);t^=t+Math.imul(t^t>>>7, t|61);return ((t^t>>>14)>>>0)/4294967296;}}
+function makePRNG(seedStr){
+  if(!seedStr) return Math.random;
+  const s = xmur3(seedStr)();
+  return mulberry32(s);
+}
+function pick(arr, rng){return arr[Math.floor(rng()*arr.length)]}
+function shuffle(arr, rng){
+  const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()* (i+1)); [a[i],a[j]]=[a[j],a[i]];} return a;
+}
+
+/* ===== テンプレ＆語彙 ===== */
+const codeLex = [
+  "commit", "push", "pull", "merge", "branch", "stash",
+  "deploy", "build", "lint", "test", "debug", "hotfix",
+  "refactor", "async", "await", "Promise", "callback",
+  "class", "function", "const", "let", "var", "null",
+  "NaN", "undefined", "404", "200", "500", "DNS", "SSL",
+  "API", "JSON", "token", "cookie", "session", "CI/CD",
+  "Git", "CLI", "UI", "UX", "DOM", "Node", "React"
+];
+
+const fillers = ["yeah", "uh", "ah", "yo", "woo", "ha", "ok", "hey"];
+
+const moods = {
+  heartbreak: {
+    tone:["未練をbreakする","夜風が冷たい","涙もcacheにしまう","過去ごとgit rm"],
+    verbs:["忘れて書く","治して立つ","上書きする","塗り変える"]
+  },
+  aggressive:{
+    tone:["牙むく808","火花が散る","評価は自分でpush","壁ごとdrop"],
+    verbs:["殴り書きする","ぶち上げる","踏み抜く","乗り越える"]
+  },
+  chill:{
+    tone:["夜更けのlo-fi","カップ片手に静かなtab","窓の外は街のgrid","低反発の余白"],
+    verbs:["なぞる","整える","染み込ませる","積む"]
+  },
+  conscious:{
+    tone:["タイムラインの騒音","アルゴが心を選別","問いだけがcommitされる","沈黙のPR"],
+    verbs:["見つめる","問い直す","晒す","ほどく"]
+  },
+  flex:{
+    tone:["KPIも越えていくflow","桁違いのbandwidth","桁、また増えたdigit","スタジオは常時green"],
+    verbs:["積み上げる","魅せつける","証明する","上げる"]
+  }
+};
+
+const lineTemplates = [
+  // {WORD} = ユーザー単語 / {CODE} = コード語彙 / {TONE}/{VERB} = ムード語彙 / {END} = 韻終端
+  "/* {FILL} */ {WORD} を宣言、constで固定　感情はimmutable {END}",
+  "{TONE}、{WORD} に focus、cursor は君にhover {END}",
+  "{CODE} 走らす夜更け、{WORD} がhookしてくる {END}",
+  "心のconsole.log('{WORD}')、出力は素直でraw {END}",
+  "デバッグで過去のバグ取り、{VERB} 未来のbranch {END}",
+  "丸の内の路地で {WORD}　足音はBPMとsync {END}",
+  "validate してからcommit、{WORD} はlint済み {END}",
+  "{WORD} をpayload、POSTで投げる願い {END}",
+  "関数は匿名でも魂は署名、{WORD} を渡す参照 {END}",
+  "rate limit 超えても {WORD} 叫ぶ、retry with backoff {END}",
+  "フロントで魅せてバックで守る、{WORD} はsecret {END}",
+  "{WORD} と {CODE} で二重らいむ、韻を圧縮zip {END}"
+];
+
+const hookTemplates = [
+  "{FILL} {WORD} × {CODE} mix, このvibe deploy {END}",
+  "A面B面 どっちも俺、{WORD} を loopしてjoy {END}",
+  "カレンダーじゃ測れないfreq、{WORD} を鳴らすtoy {END}",
+  "clickでignite, {WORD} で sky をrepaint {END}"
+];
+
+/* ===== 簡易“終韻”グルーピング =====
+   日本語＋英語をざっくり終端だけ合わせる擬似ロジック。
+*/
+function tailToken(s){
+  if(!s) return "a";
+  s = s.toString().trim().toLowerCase();
+  // 末尾のひらがな/カタカナ/英数字のみ抽出
+  const m = s.match(/[a-zぁ-んァ-ヶ一-龯0-9]+$/i);
+  const tok = (m? m[0] : s).toString();
+
+  // ローマ字/英語の母音塊ベース
+  const vowel = tok.match(/[aeiou]+[nm]?$/);
+  if(vowel) return vowel[0];
+
+  // よく使う和末尾
+  const jpEnds = ["ん","む","る","だ","よ","ね","ら","らん","たい","ない","せ","め","け","ぜ","え","か","な","よな"];
+  for(const e of jpEnds){ if(tok.endsWith(e)) return e; }
+
+  // fallback: 末尾2〜3文字
+  return tok.slice(-2);
+}
+
+function buildRhymeEndings(rng, scheme, count){
+  // 代表的な終端候補（混ぜる）
+  const base = ["ai","ou","an","ing","ar","en","on","u","e","a","yo","da","ne","ru"];
+  const picked = shuffle(base, rng).slice(0,4);
+  const ends = [];
+  const pattern = scheme.split(""); // e.g., ["A","A","B","B"]
+  const map = {};
+  let idx=0;
+  for(let i=0;i<count;i++){
+    const letter = pattern[i % pattern.length]; // A/B…
+    if(!(letter in map)){ map[letter] = picked[idx++ % picked.length]; }
+    ends.push(map[letter]);
+  }
+  return ends;
+}
+
+/* ===== ジェネレーター ===== */
+function generateLyric(config){
+  const { words, mood, style, scheme, bars, addHook, codeTone, seed } = config;
+  const rng = makePRNG(seed || (Date.now()+":"+Math.random()));
+
+  // 語彙準備
+  const userWords = words
+    .split(/[\n,、]+/)
+    .map(s => s.trim())
+    .filter(Boolean);
+  const poolWords = userWords.length? userWords : ["社会不適合者","デバッグ","無限","丸の内","シェアハウス"];
+
+  const codeWords = codeTone ? codeLex : codeLex.slice(0,12);
+  const tone = moods[mood] || moods.chill;
+
+  // バー数 & フック
+  const bodyBars = parseInt(bars,10);
+  const hookBars = addHook ? 4 : 0;
+
+  // 終韻セット
+  const ends = buildRhymeEndings(rng, scheme, bodyBars + hookBars);
+
+  // スタイルごとの味付け
+  const styleSuffix = {
+    boombap: () => pick(["", " —— raw", " — kick&snare"], rng),
+    trap: () => pick([" 💸", " 🐍", " 🔥"], rng),
+    lofi: () => pick([" ☕", " 🌙", " 🌧️"], rng)
+  }[style] || (()=>"");
+
+  // 本文生成
+  const lines = [];
+  for(let i=0;i<bodyBars;i++){
+    const t = pick(lineTemplates, rng);
+    const W = pick(poolWords, rng);
+    const C = pick(codeWords, rng);
+    const F = pick(fillers, rng);
+    const line = t
+      .replace("{WORD}", W)
+      .replace("{CODE}", C)
+      .replace("{FILL}", F)
+      .replace("{TONE}", pick(tone.tone, rng))
+      .replace("{VERB}", pick(tone.verbs, rng))
+      .replace("{END}", ends[i] + styleSuffix());
+    lines.push(line);
+  }
+
+  // フック
+  if(addHook){
+    const hook = [];
+    hook.push("[HOOK]");
+    for(let i=0;i<4;i++){
+      const t = pick(hookTemplates, rng);
+      const W = pick(poolWords, rng);
+      const C = pick(codeWords, rng);
+      const F = pick(fillers, rng);
+      hook.push(
+        t.replace("{WORD}", W)
+         .replace("{CODE}", C)
+         .replace("{FILL}", F)
+         .replace("{END}", ends[bodyBars + i] + styleSuffix())
+      );
+    }
+    lines.splice(Math.floor(bodyBars/2), 0, ...hook);
+  }
+
+  // ヘッダ
+  const head = `// --- VibeCoding Generator ---
+// mood: ${mood} | style: ${style} | scheme: ${scheme} | bars: ${bars}${addHook? " (+HOOK)":""}${seed? " | seed: "+seed:""}
+`;
+
+  return head + lines.map((l,i)=> `${String(i+1).padStart(2,"0")}. ${l}`).join("\n");
+}
+
+/* ===== UIバインド ===== */
+const $ = (id)=>document.getElementById(id);
+const out = $("out");
+
+$("gen").addEventListener("click", ()=>{
+  const text = generateLyric({
+    words: $("words").value,
+    mood: $("mood").value,
+    style: $("style").value,
+    scheme: $("scheme").value,
+    bars: $("bars").value,
+    addHook: $("showHooks").checked,
+    codeTone: $("codeTone").checked,
+    seed: $("seed").value.trim()
+  });
+  // タイプライター風（軽め）
+  out.textContent = "";
+  let i=0;
+  const speed = 1; // 0=瞬間、数字大きいほどゆっくり
+  function tick(){
+    if(i>=text.length){ return; }
+    out.textContent += text[i++];
+    if(speed===0){ out.textContent = text; return; }
+    requestAnimationFrame(tick);
+  }
+  tick();
+});
+
+$("copy").addEventListener("click", async ()=>{
+  const txt = out.textContent.trim();
+  if(!txt) return;
+  try{ await navigator.clipboard.writeText(txt); toast("コピーしました"); }
+  catch{ toast("コピー失敗…手動でお願いします"); }
+});
+
+$("download").addEventListener("click", ()=>{
+  const blob = new Blob([out.textContent||""], {type:"text/plain;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "vibecording_lyric.txt";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+});
+
+$("share").addEventListener("click", async ()=>{
+  const txt = out.textContent.trim();
+  if(!txt) return;
+  if(navigator.share){
+    try{ await navigator.share({title:"VibeCoding Lyric", text:txt}); }
+    catch(e){ /* キャンセル等 */ }
+  }else{
+    toast("共有API非対応：コピーしてSNSへどうぞ！");
+  }
+});
+
+/* ===== 小さなトースト ===== */
+function toast(msg){
+  const t = document.createElement("div");
+  t.textContent = msg;
+  Object.assign(t.style, {
+    position:"fixed", left:"50%", bottom:"24px", transform:"translateX(-50%)",
+    background:"rgba(20,26,44,.95)", color:"#e7f0ff", padding:"10px 14px",
+    borderRadius:"12px", border:"1px solid rgba(255,255,255,.12)", zIndex:9999
+  });
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 1600);
+}
+</script>
+</body>
+</html>
