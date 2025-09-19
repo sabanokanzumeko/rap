@@ -2,68 +2,42 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>VibeCoding Lyric Generator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JP Rhyme Finder (Bo-in Rhyme Categorizer)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0b0e14;--card:#111624;--text:#e7f0ff;--muted:#93a2c8;
-    --acc:#6ee7ff;--acc2:#a78bfa;--ok:#34d399;
+    --bg:#0b0f18; --card:#111827; --text:#e6eeff; --muted:#95a3c3;
+    --acc:#67e8f9; --acc2:#a78bfa; --line:rgba(255,255,255,.08);
   }
   *{box-sizing:border-box}
-  body{
-    margin:0;background:radial-gradient(1200px 600px at 20% -10%, #13203d 0%, #0b0e14 45%, #070a0f 100%);
-    color:var(--text);font:500 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-  }
-  header{
-    padding:24px 20px 8px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap
-  }
+  body{margin:0;background:radial-gradient(1200px 600px at 20% -10%, #13203d 0%, #0b0e14 45%, #070a0f 100%);
+       color:var(--text);font:500 15px/1.6 Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif}
+  header{padding:20px 18px 10px;display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
   .brand{display:flex;gap:12px;align-items:center}
-  .logo{
-    width:40px;height:40px;border-radius:12px;background:
-      conic-gradient(from 210deg, var(--acc), var(--acc2), var(--acc));
-    box-shadow:0 0 24px rgba(110,231,255,.35), inset 0 0 30px rgba(255,255,255,.08);
-  }
-  h1{margin:0;font-size:20px;letter-spacing:.3px}
-  main{padding:8px 20px 36px;display:grid;grid-template-columns:1.1fr 1.4fr;gap:18px}
-  @media(max-width:980px){ main{grid-template-columns:1fr} }
-  .card{
-    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00));
-    border:1px solid rgba(255,255,255,.06);
-    border-radius:16px;padding:16px 16px 14px;backdrop-filter: blur(6px);
-    box-shadow:0 10px 30px rgba(0,0,0,.35);
-  }
-  .card h2{margin:2px 0 12px;font-size:16px;color:#cfe2ff}
-  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .logo{width:40px;height:40px;border-radius:12px;background:conic-gradient(from 210deg, var(--acc), var(--acc2), var(--acc));box-shadow:0 0 24px rgba(110,231,255,.35), inset 0 0 30px rgba(255,255,255,.08)}
+  h1{margin:0;font-size:18px}
+  main{padding:8px 18px 28px;display:grid;grid-template-columns:1.1fr 1.4fr;gap:16px}
+  @media(max-width:1000px){main{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00));border:1px solid var(--line);border-radius:16px;padding:14px 14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .card h2{margin:2px 0 10px;font-size:15px;color:#cfe2ff}
   label{display:block;margin:10px 0 6px;color:var(--muted);font-size:13px}
-  textarea,input,select{
-    width:100%;padding:12px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.08);
-    background:#0e1422;color:var(--text);outline:none;font-size:14px;
-  }
-  textarea{min-height:120px;resize:vertical}
-  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-  button{
-    padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.1);
-    background:linear-gradient(180deg, #1a2236, #141b2b);color:var(--text);cursor:pointer;
-    transition:.15s transform ease, .15s background ease;
-  }
+  input, textarea, select{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:#0e1422;color:var(--text);outline:none;font-size:14px}
+  textarea{min-height:100px;resize:vertical}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  button{padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:linear-gradient(180deg, #1a2236, #141b2b);color:var(--text);cursor:pointer}
   button:hover{transform:translateY(-1px)}
-  .primary{background:linear-gradient(180deg, #1c3950, #112b3f);border-color:#263d55}
-  .ok{background:linear-gradient(180deg, #174434, #123528);border-color:#1f6a53}
-  .outline{background:transparent}
-  .badge{
-    display:inline-block;font-size:12px;padding:4px 8px;border-radius:999px;margin-left:8px;color:#bde7ff;background:rgba(110,231,255,.12);border:1px solid rgba(110,231,255,.35)
-  }
-  .output{
-    min-height:360px;white-space:pre-wrap;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00));
-    border:1px dashed rgba(255,255,255,.08);border-radius:14px;padding:14px;margin-top:8px
-  }
-  .footerNote{color:var(--muted);font-size:12px;margin-top:10px}
-  .tiny{font-size:12px;color:var(--muted)}
-  .gridFine{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .muted{color:#9eb1db}
-  .tip{font-size:12px;color:#a7ffea}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .note{color:var(--muted);font-size:12px;margin-top:6px}
+  .pill{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.16);font-size:12px;color:#bde7ff;background:rgba(110,231,255,.12);}
+  .section{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+  .list{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:#0e1626}
+  .titleRow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .badge{font-size:12px;color:#a7ffea}
+  .empty{opacity:.7}
 </style>
 </head>
 <body>
@@ -71,342 +45,202 @@
     <div class="brand">
       <div class="logo" aria-hidden="true"></div>
       <div>
-        <h1>VibeCoding Lyric Generator <span class="badge">ラップ × コーディング</span></h1>
-        <div class="tiny">キーワードを入れて、ムード/韻スキーム/長さを選ぶだけ。完全ローカル・API不要。</div>
+        <h1>JP Rhyme Finder — 母音韻カテゴリ</h1>
+        <div class="note">日本語ラップでよく使う「母音一致」をベースに、語尾パターンでカテゴリ分けして並べます。ひらがな/カタカナ推奨（漢字は読みが取れないため）。</div>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- 左：設定 -->
     <section class="card" aria-labelledby="config">
-      <h2 id="config">設定</h2>
-      <label for="words">キーワード（カンマ or 改行区切り）</label>
-      <textarea id="words" placeholder="例）社会不適合者, デバッグ, 無限, 丸の内, シェアハウス"></textarea>
+      <h2 id="config">入力</h2>
+      <label for="word">キーワード（1語・読み推奨）</label>
+      <input id="word" placeholder="例：むげん／ミライ／デプロイ／まるのうち" />
 
-      <div class="row">
+      <div class="grid-2">
         <div>
-          <label for="mood">ムード</label>
-          <select id="mood">
-            <option value="heartbreak">失恋×復活</option>
-            <option value="aggressive">アグレッシブ</option>
-            <option value="chill" selected>チル/日常</option>
-            <option value="conscious">社会/内省</option>
-            <option value="flex">自信/フレックス</option>
+          <label for="depth">母音の比較長さ（1〜3）</label>
+          <select id="depth">
+            <option value="1">末尾1母音</option>
+            <option value="2" selected>末尾2母音</option>
+            <option value="3">末尾3母音</option>
           </select>
         </div>
         <div>
-          <label for="style">スタイル</label>
-          <select id="style">
-            <option value="boombap" selected>BoomBap</option>
-            <option value="trap">Trap</option>
-            <option value="lofi">Lo-fi</option>
+          <label for="limit">各カテゴリの最大件数</label>
+          <select id="limit">
+            <option>20</option>
+            <option selected>40</option>
+            <option>80</option>
+            <option>200</option>
           </select>
         </div>
       </div>
 
-      <div class="row3">
-        <div>
-          <label for="scheme">韻スキーム</label>
-          <select id="scheme">
-            <option value="AABB" selected>AABB</option>
-            <option value="ABAB">ABAB</option>
-            <option value="AAAA">AAAA</option>
-          </select>
+      <div class="section">
+        <div class="titleRow">
+          <h3 style="margin:0;font-size:14px;color:#cfe2ff">辞書データ（任意）</h3>
+          <span class="pill">貼り付けで拡張可</span>
         </div>
-        <div>
-          <label for="bars">バー数</label>
-          <select id="bars">
-            <option value="8">8 bars</option>
-            <option value="12" selected>12 bars</option>
-            <option value="16">16 bars</option>
-          </select>
-        </div>
-        <div>
-          <label for="seed">SEED（同じ結果にしたい時）</label>
-          <input id="seed" placeholder="任意の文字列。空だと毎回ランダム" />
-        </div>
-      </div>
-
-      <div class="gridFine">
-        <div>
-          <label><input type="checkbox" id="showHooks" checked /> サビ（フック）を自動生成</label>
-        </div>
-        <div>
-          <label><input type="checkbox" id="codeTone" checked /> コーディング用語を多めに混ぜる</label>
-        </div>
+        <textarea id="custom" placeholder="1行1語で追加（かな/カナ推奨）。例：\nむげん\nかくめい\nしょうねん\nフロウ\nデプロイ\n"></textarea>
+        <div class="note">※ 初期辞書は数百語のサンプル。ここに追加すると検索対象にマージされます。</div>
       </div>
 
       <div class="controls">
-        <button id="gen" class="primary">リリックを生成</button>
-        <button id="copy" class="outline">コピー</button>
-        <button id="download" class="outline">.txtで保存</button>
-        <button id="share" class="ok">共有</button>
-      </div>
-      <div class="footerNote">
-        <span class="tip">Tip:</span> 同じSEED＋同じ設定＝同じ歌詞。ランダムにしたいときはSEEDを空に。
+        <button id="run">韻をさがす</button>
+        <button id="clear">クリア</button>
       </div>
     </section>
 
-    <!-- 右：出力 -->
-    <section class="card" aria-labelledby="outputTitle">
-      <h2 id="outputTitle">出力</h2>
-      <div id="out" class="output" aria-live="polite" aria-atomic="true">ここにリリックが表示されます。</div>
-      <div class="footerNote muted">※ 簡易的な擬似韻ロジックで終韻を合わせています（日本語＋ローマ字っぽい終端）。</div>
+    <section class="card" aria-labelledby="outTitle">
+      <div class="titleRow">
+        <h2 id="outTitle">結果</h2>
+        <div class="badge" id="summary">—</div>
+      </div>
+      <div id="results"></div>
+      <div class="note section">カテゴリ：①完全母音一致／②2モーラ終端一致（かな）／③撥音・促音・長音近似／④外来語語尾（ション/ティオン/ーション等）。</div>
     </section>
   </main>
 
-<script>
-/* ===== 小さなユーティリティ（シード付き乱数） ===== */
-function xmur3(str){let h=1779033703^str.length;for(let i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19;}return function(){h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return (h^h>>>16)>>>0;}}
-function mulberry32(a){return function(){var t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15, t|1);t^=t+Math.imul(t^t>>>7, t|61);return ((t^t>>>14)>>>0)/4294967296;}}
-function makePRNG(seedStr){
-  if(!seedStr) return Math.random;
-  const s = xmur3(seedStr)();
-  return mulberry32(s);
-}
-function pick(arr, rng){return arr[Math.floor(rng()*arr.length)]}
-function shuffle(arr, rng){
-  const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()* (i+1)); [a[i],a[j]]=[a[j],a[i]];} return a;
-}
+  <script src="https://unpkg.com/wanakana@5.2.0/dist/wanakana.min.js"></script>
+  <script>
+    // --- サンプル辞書（かな/カナ中心：母音抽出に強い） ---
+    const BASE_DB = [
+      // よく使う抽象語/ライム素材
+      "むげん","げんせん","きけん","ぜんけい","しぜん","せんねん","しゅだん","ぶんめい","きぼう","みらい","けっか","げんじつ","かくめい","しこう","しゅうちゅう","たいりょく","てんかい","しょうねん","しょうじょ","しょうがい","じだい","きみ","こころ","ことば","おもい","ゆめ","せかい","ひかり","よる","あさ","かぜ","なみ","そら","ほし",
+      // 動詞・形容
+      "たたかう","まにあう","つながる","つくる","こわす","こえる","あげる","おとす","まわす","ならす","わらう","なく","さけぶ","うごく","ねむい","せつない","あぶない","やさしい","つよい","こわい","あつい","さむい","あおい","くらい","あかい",
+      // 都市/場所
+      "まるのうち","しぶや","しんじゅく","ぎんざ","とよす","とうきょう","よこはま","おおさか","なごや","ふくおか","さっぽろ","うめだ",
+      // カタカナ外来語（語尾が揃いやすい）
+      "フロウ","デプロイ","ドメイン","ドライブ","オンライン","オフライン","バイブス","セッション","エディション","ミッション","ビジョン","ヴァージョン","パッション","ソリューション","コミット","ブランチ","マージ","デバッグ","リファクタ","ホットフィックス","インスピレーション","インフォメーション","シチュエーション","ステーション","ビート","トラック","メロディ","ハーモニー","メッセージ","バージ","エモーション",
+      // 擬音・合いの手
+      "やー","よー","はっ","うー","あー","えい","おい","どーん",
+      // 形態素っぽい接尾（語として扱う）
+      "じゃない","みたい","みたいな","っぽい","らしい","らしく","らしさ","まじで","ほんと","だいたい","わりと","けっこう",
+      // ラッパー的フレーズ素材
+      "きょうも","あしたも","いつでも","どこでも","ここから","このまま","いまだけ","いまから","まだまだ","そろそろ","たぶん","ぜったい","まちがいない"
+    ];
 
-/* ===== テンプレ＆語彙 ===== */
-const codeLex = [
-  "commit", "push", "pull", "merge", "branch", "stash",
-  "deploy", "build", "lint", "test", "debug", "hotfix",
-  "refactor", "async", "await", "Promise", "callback",
-  "class", "function", "const", "let", "var", "null",
-  "NaN", "undefined", "404", "200", "500", "DNS", "SSL",
-  "API", "JSON", "token", "cookie", "session", "CI/CD",
-  "Git", "CLI", "UI", "UX", "DOM", "Node", "React"
-];
-
-const fillers = ["yeah", "uh", "ah", "yo", "woo", "ha", "ok", "hey"];
-
-const moods = {
-  heartbreak: {
-    tone:["未練をbreakする","夜風が冷たい","涙もcacheにしまう","過去ごとgit rm"],
-    verbs:["忘れて書く","治して立つ","上書きする","塗り変える"]
-  },
-  aggressive:{
-    tone:["牙むく808","火花が散る","評価は自分でpush","壁ごとdrop"],
-    verbs:["殴り書きする","ぶち上げる","踏み抜く","乗り越える"]
-  },
-  chill:{
-    tone:["夜更けのlo-fi","カップ片手に静かなtab","窓の外は街のgrid","低反発の余白"],
-    verbs:["なぞる","整える","染み込ませる","積む"]
-  },
-  conscious:{
-    tone:["タイムラインの騒音","アルゴが心を選別","問いだけがcommitされる","沈黙のPR"],
-    verbs:["見つめる","問い直す","晒す","ほどく"]
-  },
-  flex:{
-    tone:["KPIも越えていくflow","桁違いのbandwidth","桁、また増えたdigit","スタジオは常時green"],
-    verbs:["積み上げる","魅せつける","証明する","上げる"]
-  }
-};
-
-const lineTemplates = [
-  // {WORD} = ユーザー単語 / {CODE} = コード語彙 / {TONE}/{VERB} = ムード語彙 / {END} = 韻終端
-  "/* {FILL} */ {WORD} を宣言、constで固定　感情はimmutable {END}",
-  "{TONE}、{WORD} に focus、cursor は君にhover {END}",
-  "{CODE} 走らす夜更け、{WORD} がhookしてくる {END}",
-  "心のconsole.log('{WORD}')、出力は素直でraw {END}",
-  "デバッグで過去のバグ取り、{VERB} 未来のbranch {END}",
-  "丸の内の路地で {WORD}　足音はBPMとsync {END}",
-  "validate してからcommit、{WORD} はlint済み {END}",
-  "{WORD} をpayload、POSTで投げる願い {END}",
-  "関数は匿名でも魂は署名、{WORD} を渡す参照 {END}",
-  "rate limit 超えても {WORD} 叫ぶ、retry with backoff {END}",
-  "フロントで魅せてバックで守る、{WORD} はsecret {END}",
-  "{WORD} と {CODE} で二重らいむ、韻を圧縮zip {END}"
-];
-
-const hookTemplates = [
-  "{FILL} {WORD} × {CODE} mix, このvibe deploy {END}",
-  "A面B面 どっちも俺、{WORD} を loopしてjoy {END}",
-  "カレンダーじゃ測れないfreq、{WORD} を鳴らすtoy {END}",
-  "clickでignite, {WORD} で sky をrepaint {END}"
-];
-
-/* ===== 簡易“終韻”グルーピング =====
-   日本語＋英語をざっくり終端だけ合わせる擬似ロジック。
-*/
-function tailToken(s){
-  if(!s) return "a";
-  s = s.toString().trim().toLowerCase();
-  // 末尾のひらがな/カタカナ/英数字のみ抽出
-  const m = s.match(/[a-zぁ-んァ-ヶ一-龯0-9]+$/i);
-  const tok = (m? m[0] : s).toString();
-
-  // ローマ字/英語の母音塊ベース
-  const vowel = tok.match(/[aeiou]+[nm]?$/);
-  if(vowel) return vowel[0];
-
-  // よく使う和末尾
-  const jpEnds = ["ん","む","る","だ","よ","ね","ら","らん","たい","ない","せ","め","け","ぜ","え","か","な","よな"];
-  for(const e of jpEnds){ if(tok.endsWith(e)) return e; }
-
-  // fallback: 末尾2〜3文字
-  return tok.slice(-2);
-}
-
-function buildRhymeEndings(rng, scheme, count){
-  // 代表的な終端候補（混ぜる）
-  const base = ["ai","ou","an","ing","ar","en","on","u","e","a","yo","da","ne","ru"];
-  const picked = shuffle(base, rng).slice(0,4);
-  const ends = [];
-  const pattern = scheme.split(""); // e.g., ["A","A","B","B"]
-  const map = {};
-  let idx=0;
-  for(let i=0;i<count;i++){
-    const letter = pattern[i % pattern.length]; // A/B…
-    if(!(letter in map)){ map[letter] = picked[idx++ % picked.length]; }
-    ends.push(map[letter]);
-  }
-  return ends;
-}
-
-/* ===== ジェネレーター ===== */
-function generateLyric(config){
-  const { words, mood, style, scheme, bars, addHook, codeTone, seed } = config;
-  const rng = makePRNG(seed || (Date.now()+":"+Math.random()));
-
-  // 語彙準備
-  const userWords = words
-    .split(/[\n,、]+/)
-    .map(s => s.trim())
-    .filter(Boolean);
-  const poolWords = userWords.length? userWords : ["社会不適合者","デバッグ","無限","丸の内","シェアハウス"];
-
-  const codeWords = codeTone ? codeLex : codeLex.slice(0,12);
-  const tone = moods[mood] || moods.chill;
-
-  // バー数 & フック
-  const bodyBars = parseInt(bars,10);
-  const hookBars = addHook ? 4 : 0;
-
-  // 終韻セット
-  const ends = buildRhymeEndings(rng, scheme, bodyBars + hookBars);
-
-  // スタイルごとの味付け
-  const styleSuffix = {
-    boombap: () => pick(["", " —— raw", " — kick&snare"], rng),
-    trap: () => pick([" 💸", " 🐍", " 🔥"], rng),
-    lofi: () => pick([" ☕", " 🌙", " 🌧️"], rng)
-  }[style] || (()=>"");
-
-  // 本文生成
-  const lines = [];
-  for(let i=0;i<bodyBars;i++){
-    const t = pick(lineTemplates, rng);
-    const W = pick(poolWords, rng);
-    const C = pick(codeWords, rng);
-    const F = pick(fillers, rng);
-    const line = t
-      .replace("{WORD}", W)
-      .replace("{CODE}", C)
-      .replace("{FILL}", F)
-      .replace("{TONE}", pick(tone.tone, rng))
-      .replace("{VERB}", pick(tone.verbs, rng))
-      .replace("{END}", ends[i] + styleSuffix());
-    lines.push(line);
-  }
-
-  // フック
-  if(addHook){
-    const hook = [];
-    hook.push("[HOOK]");
-    for(let i=0;i<4;i++){
-      const t = pick(hookTemplates, rng);
-      const W = pick(poolWords, rng);
-      const C = pick(codeWords, rng);
-      const F = pick(fillers, rng);
-      hook.push(
-        t.replace("{WORD}", W)
-         .replace("{CODE}", C)
-         .replace("{FILL}", F)
-         .replace("{END}", ends[bodyBars + i] + styleSuffix())
-      );
+    // --- かな/カナ限定で母音列を抽出（漢字は読み不明のため非対応） ---
+    const VOWELS = ['a','i','u','e','o'];
+    function toRomajiSafe(s){
+      // かな/カナはローマ字へ、英字はそのまま、漢字は削る
+      const onlyKana = (s||'').replace(/[\u4e00-\u9faf]/g, ''); // 漢字除去
+      return window.wanakana.toRomaji(onlyKana).toLowerCase();
     }
-    lines.splice(Math.floor(bodyBars/2), 0, ...hook);
-  }
+    function vowelTrail(roma, n=2){
+      const vs = (roma.match(/[aeiou]+/g)||[]).join('');
+      return vs.slice(-n);
+    }
+    function kanaTrail(s, mora=2){
+      const kana = window.wanakana.toKana((s||'').replace(/[\u4e00-\u9faf]/g, ''));
+      // 促音・長音・撥音も含めた末尾mora（ざっくり）
+      const arr = Array.from(kana);
+      return arr.slice(-mora).join('');
+    }
+    function categoryOf(word){
+      // 末尾パターン簡易分類
+      const w = (word||'').toString();
+      if(/(ション|ティオン|ージョン|ジョン)$/.test(w)) return '外来語語尾(ション系)';
+      if(/[んン]$/.test(w)) return '撥音(ん)で終わる';
+      if(/[っッ]$/.test(w)) return '促音(っ)終わり';
+      if(/[ー]$/.test(w)) return '長音(ー)終わり';
+      return '一般語尾';
+    }
 
-  // ヘッダ
-  const head = `// --- VibeCoding Generator ---
-// mood: ${mood} | style: ${style} | scheme: ${scheme} | bars: ${bars}${addHook? " (+HOOK)":""}${seed? " | seed: "+seed:""}
-`;
+    // --- 検索処理 ---
+    const $ = (id)=>document.getElementById(id);
+    const resultsEl = $('results');
+    const summaryEl = $('summary');
 
-  return head + lines.map((l,i)=> `${String(i+1).padStart(2,"0")}. ${l}`).join("\n");
-}
+    function parseCustomDB(){
+      const rows = $('custom').value.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+      return rows;
+    }
 
-/* ===== UIバインド ===== */
-const $ = (id)=>document.getElementById(id);
-const out = $("out");
+    function unique(arr){ return Array.from(new Set(arr)); }
 
-$("gen").addEventListener("click", ()=>{
-  const text = generateLyric({
-    words: $("words").value,
-    mood: $("mood").value,
-    style: $("style").value,
-    scheme: $("scheme").value,
-    bars: $("bars").value,
-    addHook: $("showHooks").checked,
-    codeTone: $("codeTone").checked,
-    seed: $("seed").value.trim()
-  });
-  // タイプライター風（軽め）
-  out.textContent = "";
-  let i=0;
-  const speed = 1; // 0=瞬間、数字大きいほどゆっくり
-  function tick(){
-    if(i>=text.length){ return; }
-    out.textContent += text[i++];
-    if(speed===0){ out.textContent = text; return; }
-    requestAnimationFrame(tick);
-  }
-  tick();
-});
+    function search(){
+      const q = $('word').value.trim();
+      if(!q){ resultsEl.innerHTML = '<div class="empty">キーワードを入れてね（かな/カナ推奨）</div>'; summaryEl.textContent='—'; return; }
 
-$("copy").addEventListener("click", async ()=>{
-  const txt = out.textContent.trim();
-  if(!txt) return;
-  try{ await navigator.clipboard.writeText(txt); toast("コピーしました"); }
-  catch{ toast("コピー失敗…手動でお願いします"); }
-});
+      const depth = parseInt($('depth').value,10);
+      const limit = parseInt($('limit').value,10);
 
-$("download").addEventListener("click", ()=>{
-  const blob = new Blob([out.textContent||""], {type:"text/plain;charset=utf-8"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "vibecording_lyric.txt";
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
-});
+      const db = unique(BASE_DB.concat(parseCustomDB()));
 
-$("share").addEventListener("click", async ()=>{
-  const txt = out.textContent.trim();
-  if(!txt) return;
-  if(navigator.share){
-    try{ await navigator.share({title:"VibeCoding Lyric", text:txt}); }
-    catch(e){ /* キャンセル等 */ }
-  }else{
-    toast("共有API非対応：コピーしてSNSへどうぞ！");
-  }
-});
+      const romaQ = toRomajiSafe(q);
+      const vtQ = vowelTrail(romaQ, depth);
+      const ktQ = kanaTrail(q, 2);
 
-/* ===== 小さなトースト ===== */
-function toast(msg){
-  const t = document.createElement("div");
-  t.textContent = msg;
-  Object.assign(t.style, {
-    position:"fixed", left:"50%", bottom:"24px", transform:"translateX(-50%)",
-    background:"rgba(20,26,44,.95)", color:"#e7f0ff", padding:"10px 14px",
-    borderRadius:"12px", border:"1px solid rgba(255,255,255,.12)", zIndex:9999
-  });
-  document.body.appendChild(t);
-  setTimeout(()=>t.remove(), 1600);
-}
-</script>
+      // 4カテゴリで集計
+      const buckets = {
+        '① 完全母音一致（末尾' + depth + '母音）': [],
+        '② 2モーラ終端一致（かな）': [],
+        '③ 撥音/促音/長音近似': [],
+        '④ 外来語語尾（ション/ティオン等）': []
+      };
+
+      for(const w of db){
+        const r = toRomajiSafe(w);
+        const vt = vowelTrail(r, depth);
+        const kt = kanaTrail(w, 2);
+        const cat = categoryOf(w);
+
+        // ① 完全母音一致
+        if(vt && vt === vtQ) buckets['① 完全母音一致（末尾' + depth + '母音）'].push(w);
+        // ② 2モーラ終端一致
+        if(kt && ktQ && kt === ktQ) buckets['② 2モーラ終端一致（かな）'].push(w);
+        // ③ 撥音/促音/長音近似（同カテゴリ同士で抽出）
+        if((/[んン]$/.test(w) && /[んン]$/.test(q)) ||
+           (/[っッ]$/.test(w) && /[っッ]$/.test(q)) ||
+           (/[ー]$/.test(w) && /[ー]$/.test(q))){
+          buckets['③ 撥音/促音/長音近似'].push(w);
+        }
+        // ④ 外来語語尾（ション系）
+        if(/(ション|ティオン|ージョン|ジョン)$/.test(w) && /(ション|ティオン|ージョン|ジョン)$/.test(q)){
+          buckets['④ 外来語語尾（ション/ティオン等）'].push(w);
+        }
+      }
+
+      // 表示
+      resultsEl.innerHTML = '';
+      let total=0;
+      Object.entries(buckets).forEach(([title, arr])=>{
+        const uniq = unique(arr).filter(w=>w !== q).slice(0, limit);
+        total += uniq.length;
+        const wrap = document.createElement('div');
+        wrap.className = 'section';
+        wrap.innerHTML = `<div class="titleRow"><h3 style="margin:0 0 6px 0;font-size:14px;color:#cfe2ff">${title}</h3><span class="pill">${uniq.length}件</span></div>`;
+        const list = document.createElement('div');
+        list.className = 'list';
+        uniq.forEach(w=>{
+          const chip = document.createElement('div');
+          chip.className = 'chip';
+          chip.textContent = w;
+          list.appendChild(chip);
+        });
+        if(uniq.length===0){
+          const empty = document.createElement('div');
+          empty.className = 'empty';
+          empty.textContent = '該当なし';
+          list.appendChild(empty);
+        }
+        wrap.appendChild(list);
+        resultsEl.appendChild(wrap);
+      });
+
+      summaryEl.textContent = `総計 ${total} 件 / 深さ: 母音${depth}`;
+    }
+
+    $('run').addEventListener('click', search);
+    $('clear').addEventListener('click', ()=>{
+      $('word').value=''; $('custom').value=''; resultsEl.innerHTML=''; summaryEl.textContent='—';
+    });
+
+    // Enterキーで検索
+    $('word').addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); search(); }});
+  </script>
 </body>
 </html>
